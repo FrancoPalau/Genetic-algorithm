@@ -56,13 +56,30 @@ if __name__ == "__main__" :
 
     #----Creacion de la poblacion inicial----#
     ejemplo_almacen = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-    poblacion_actual = creacion_poblacion(ejemplo_almacen,5)
+    poblacion_actual = creacion_poblacion(ejemplo_almacen,10)
 
     #----Calculo del fitness de la poblacion inicial----#
     fitness_actual = []
     for individuo in poblacion_actual:
         fitness_actual.append(fitness_interno(lista_ordenes.copy(),individuo))
+    fitness_total = sum(fitness_actual)
+    print(fitness_actual)
+
+    #----Loop del algo genetico----#
+    it = 0
+    while(it == 0):
+        #----Seleccion Padres----#
+        poblacion_aux = poblacion_actual.copy()
+        fitness_sorted = sorted(fitness_actual)
+        for i in range(int(len(fitness_actual)/2)):
+            poblacion_actual[i] = poblacion_aux[fitness_actual.index(fitness_sorted[i])]
+        poblacion_actual[int((len(fitness_actual)/2)):] = poblacion_actual[:int((len(fitness_actual)/2))]
+
+        #----Evolucion----#
+
+        #----Calculo fitness----#
 
 
+        it+=1
 
 
