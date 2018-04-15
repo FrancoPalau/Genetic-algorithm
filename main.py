@@ -48,6 +48,32 @@ def fitness_interno(lista_ordenes, almacen_actual):
     print(np_mapa)
     return promedio_dist
 
+def seleccion_padres(fitness_actual, poblacion_actual):
+    poblacion_aux = poblacion_actual.copy()
+    fitness_sorted = sorted(fitness_actual)
+    for i in range(int(len(fitness_actual) / 2)):
+        poblacion_actual[i] = poblacion_aux[fitness_actual.index(fitness_sorted[i])]
+    poblacion_actual[int((len(fitness_actual) / 2)):] = poblacion_actual[:int((len(fitness_actual) / 2))]
+
+def cruzamiento(poblacion_actual):
+    p_cruce_1 = np.random.randint(0,len(poblacion_actual[0])-1)
+    p_cruce_2 = np.random.randint(p_cruce_1+1,len(poblacion_actual[0]))
+    for i in range(0,len(poblacion_actual),2):
+        aux1 = poblacion_actual[i][p_cruce_1:p_cruce_2]
+        aux2 = poblacion_actual[i+1][p_cruce_1:p_cruce_2]
+        aux_ord_1 = np.concatenate([poblacion_actual[i][p_cruce_2:],poblacion_actual[i][:p_cruce_2]])
+        aux_ord_2 = np.concatenate([poblacion_actual[i+1][p_cruce_2:],poblacion_actual[i+1][:p_cruce_2]])
+        dif = len(poblacion_actual[i]) - p_cruce_1
+        for gen in aux_ord_1:
+            if gen not in aux2:
+                aux2 = np.append(aux2,[gen])
+        poblacion_actual[i] = np.concatenate([aux2[dif:],aux2[:dif]])
+        for gen in aux_ord_2:
+            if gen not in aux1:
+                aux1 = np.append(aux1, [gen])
+        poblacion_actual[i+1] = np.concatenate([aux1[dif:], aux1[:dif]])
+
+
 if __name__ == "__main__" :
 
     #----Creacion de las Ordenes----#
@@ -68,14 +94,13 @@ if __name__ == "__main__" :
     #----Loop del algo genetico----#
     it = 0
     while(it == 0):
-        #----Seleccion Padres----#
-        poblacion_aux = poblacion_actual.copy()
-        fitness_sorted = sorted(fitness_actual)
-        for i in range(int(len(fitness_actual)/2)):
-            poblacion_actual[i] = poblacion_aux[fitness_actual.index(fitness_sorted[i])]
-        poblacion_actual[int((len(fitness_actual)/2)):] = poblacion_actual[:int((len(fitness_actual)/2))]
 
+        #----Seleccion Padres----#
+        seleccion_padres(fitness_actual,poblacion_actual)
+        print("Vieja",poblacion_actual)
         #----Evolucion----#
+        cruzamiento(poblacion_actual)
+        print("Nueva",poblacion_actual)
 
         #----Calculo fitness----#
 
