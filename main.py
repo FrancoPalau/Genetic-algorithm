@@ -57,7 +57,6 @@ def seleccion_padres(fitness_actual, poblacion_actual):
     poblacion_actual[int((len(fitness_actual) / 2)):] = poblacion_actual[:int((len(fitness_actual) / 2))]
 
 def cruzamiento(poblacion_actual):
-
     for i in range(0,len(poblacion_actual),2):
         p_cruce_1 = np.random.randint(0, len(poblacion_actual[0]) - 1)
         p_cruce_2 = np.random.randint(p_cruce_1 + 1, len(poblacion_actual[0]))
@@ -76,6 +75,12 @@ def cruzamiento(poblacion_actual):
         poblacion_actual[i+1] = np.concatenate([aux1[dif:], aux1[:dif]])
 
 def mutacion(poblacion_actual):
+    """
+    Funcion que recibe la poblacion actual (list of numpy arrays)
+    y realiza una mutacion por cada individuo.
+    Esta mutacion consiste en seleccionar 2 genes al azar e intercambiarlos
+    No retorna nada ya que la poblacion se pasa por referencia.
+    """
     for i in range(0, len(poblacion_actual)):
         gen_1 = np.random.randint(0, len(poblacion_actual[0]))
         gen_2 = np.random.randint(0, len(poblacion_actual[0]))
@@ -88,7 +93,7 @@ if __name__ == "__main__" :
 
     #----Creacion de las Ordenes----#
     np.random.seed(101) #Para que siempre trabajemos con las mismas ordenes
-    lista_ordenes = creacion_ordenes(16,20,4,10)
+    lista_ordenes = creacion_ordenes(16,5,4,10)
 
     #----Creacion de la poblacion inicial----#
     ejemplo_almacen = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
@@ -108,22 +113,22 @@ if __name__ == "__main__" :
     vec_it = []
     it = 0
     vec_it.append(it)
-    while(it < 1000):
+    while(it < 100):
 
         #----Seleccion Padres----#
         seleccion_padres(fitness_actual,poblacion_actual)
-        # print("Vieja",poblacion_actual)
+
         #----Evolucion----#
         cruzamiento(poblacion_actual)
         mutacion(poblacion_actual)
-        # print("Nueva",poblacion_actual)
+
         #----Calculo fitness----#
         fitness_actual = []
         for individuo in poblacion_actual:
             fitness_actual.append(fitness_interno(lista_ordenes.copy(), individuo))
         fitness_prom = sum(fitness_actual) / len(poblacion_actual)
-        print(fitness_actual)
-        print(fitness_prom)
+        print("IT:",it,"Fitness",fitness_prom)
+
         vec_fit_prom.append(fitness_prom)
         it+=1
         vec_it.append(it)
