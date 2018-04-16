@@ -14,6 +14,11 @@ def construccion_mapa(almacen_actual):
             [0, almacen_actual[4], almacen_actual[5], 0, almacen_actual[6], almacen_actual[7], 0],
             [0, almacen_actual[8], almacen_actual[9], 0, almacen_actual[10], almacen_actual[11], 0],
             [0, almacen_actual[12], almacen_actual[13], 0, almacen_actual[14], almacen_actual[15], 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, almacen_actual[16], almacen_actual[17], 0, almacen_actual[18], almacen_actual[19], 0],
+            [0, almacen_actual[20], almacen_actual[21], 0, almacen_actual[22], almacen_actual[23], 0],
+            [0, almacen_actual[24], almacen_actual[25], 0, almacen_actual[26], almacen_actual[27], 0],
+            [0, almacen_actual[28], almacen_actual[29], 0, almacen_actual[30], almacen_actual[31], 0],
             [0, 0, 0, 0, 0, 0, 0]]
 
 def dist_manhatann(inicio, fin, np_mapa):
@@ -93,10 +98,11 @@ if __name__ == "__main__" :
 
     #----Creacion de las Ordenes----#
     np.random.seed(101) #Para que siempre trabajemos con las mismas ordenes
-    lista_ordenes = creacion_ordenes(16,5,4,10)
+    lista_ordenes = creacion_ordenes(32,5,4,10)
 
     #----Creacion de la poblacion inicial----#
-    ejemplo_almacen = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+    # ejemplo_almacen = np.arange(1,32)
+    ejemplo_almacen = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]
     poblacion_actual = creacion_poblacion(ejemplo_almacen,100)
 
     #----Calculo del fitness de la poblacion inicial----#
@@ -113,7 +119,7 @@ if __name__ == "__main__" :
     vec_it = []
     it = 0
     vec_it.append(it)
-    while(it < 100):
+    while(it < 500):
 
         #----Seleccion Padres----#
         seleccion_padres(fitness_actual,poblacion_actual)
