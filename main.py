@@ -1,6 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# TO DO LIST:
+#             _ Hacer devuelta la seleccion de seleccion_padres
+#             _ Agregar algoritmo con restricciones para el fitness interno (ver opcion tabla)
+#             _ Optimizar la construccion del mapa
+
+
 def creacion_ordenes(cant_tipos_produc, cant_ordenes, min_size, max_size):
     """
     Funcion que recibe la cantidad de tipos de productos, la cantidad de ordenes,
