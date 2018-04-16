@@ -2,6 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def creacion_ordenes(cant_tipos_produc, cant_ordenes, min_size, max_size):
+    """
+    Funcion que recibe la cantidad de tipos de productos, la cantidad de ordenes,
+    y el maximo y minimo tamaño posible de las ordenes.
+    Se crea una lista donde se almacenan las ordenes creadas (numpy arrays).
+    Se crean tantas ordenes como cant_ordenes.
+    Cada orden puede tener una longitud variable entre [min_size,max_size] y contener
+    cualquier tipo de producto desde 1 hasta cant_tipos_produc
+    """
     lista_ordenes = []  # Lista donde se almacenan todas las ordenes
     # Creacion de las ordenes
     for i in range(cant_ordenes):
@@ -28,7 +36,14 @@ def dist_manhatann(inicio, fin, np_mapa):
     return distancia
 
 def creacion_poblacion(individuo_ejemplo, size_poblacion):
-    # Creacion de poblacion
+    """
+    Funcion que recibe un individuo ejemplo (numpy array) y el tamaño
+    de la poblacion (int). A ese individuo ejemplo se le realizan permutaciones
+    aleatorias para crear una poblacion donde todos los individuos contienen
+    todos los tipos de productos (sin repeticion) y a su vez son aleatoriamente
+    distintos de los otros.
+    Retorna la poblacion creada (list of numpy arrays)
+    """
     poblacion = []
     for i in range(size_poblacion):
         poblacion.append(np.random.permutation(individuo_ejemplo)) #Permutando aleatoriamente obtenemos el nuevo individuo
@@ -36,6 +51,13 @@ def creacion_poblacion(individuo_ejemplo, size_poblacion):
     return poblacion
 
 def fitness_interno(lista_ordenes, almacen_actual):
+    """
+    Funcion que dada una lista de ordenes (list of numpy arrays) y una configuracion
+    del almacen (almacen_actual, numpy array) calcula el fitness para ese almacen (individuo).
+    Este fitness es la distancia promedio por orden, basada en la distancia de Manhatann y
+    resuelta con un algoritmo de busqueda avara.
+    Retorna el valor de fitness para el almacen dado
+    """
     np_mapa = np.array(construccion_mapa(almacen_actual)) #Armamos el mapa segun nuestro layout
     dist_total = 0
     for j,i in enumerate(lista_ordenes): #Iteramos sobre todas las ordenes
@@ -51,7 +73,6 @@ def fitness_interno(lista_ordenes, almacen_actual):
             i[pasadas + 1], i[pos_min + pasadas + 1] = (i[pos_min + pasadas + 1], i[pasadas + 1]) #Intercambiamos posiciones
 
     promedio_dist = dist_total / len(lista_ordenes)
-    # print(np_mapa)
     return promedio_dist
 
 def seleccion_padres(fitness_actual, poblacion_actual):
@@ -62,6 +83,12 @@ def seleccion_padres(fitness_actual, poblacion_actual):
     poblacion_actual[int((len(fitness_actual) / 2)):] = poblacion_actual[:int((len(fitness_actual) / 2))]
 
 def cruzamiento(poblacion_actual):
+    """
+    Funcion que recibe la poblacion actual (list of numpy arrays)
+    y realiza un cruce de orden, donde se obtienen 2 nuevos hijos
+    y se modifica la poblacion actual
+    No retorna nada ya que la poblacion se pasa por referencia.
+    """
     for i in range(0,len(poblacion_actual),2):
         p_cruce_1 = np.random.randint(0, len(poblacion_actual[0]) - 1)
         p_cruce_2 = np.random.randint(p_cruce_1 + 1, len(poblacion_actual[0]))
@@ -98,11 +125,10 @@ if __name__ == "__main__" :
 
     #----Creacion de las Ordenes----#
     np.random.seed(101) #Para que siempre trabajemos con las mismas ordenes
-    lista_ordenes = creacion_ordenes(32,5,4,10)
+    lista_ordenes = creacion_ordenes(32,1,4,10)
 
     #----Creacion de la poblacion inicial----#
-    # ejemplo_almacen = np.arange(1,32)
-    ejemplo_almacen = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]
+    ejemplo_almacen = np.arange(1,33)
     poblacion_actual = creacion_poblacion(ejemplo_almacen,100)
 
     #----Calculo del fitness de la poblacion inicial----#
@@ -141,5 +167,4 @@ if __name__ == "__main__" :
 
     plt.plot(vec_it,vec_fit_prom)
     plt.show()
-
 
