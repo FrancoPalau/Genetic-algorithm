@@ -53,7 +53,6 @@ def creacion_poblacion(individuo_ejemplo, size_poblacion):
     poblacion = []
     for i in range(size_poblacion):
         poblacion.append(np.random.permutation(individuo_ejemplo)) #Permutando aleatoriamente obtenemos el nuevo individuo
-        # np.random.seed(np.random.randint(0,500)) #Cambiamos la semilla para que cada orden sea distinta a las otras
     return poblacion
 
 def fitness_interno(lista_ordenes, almacen_actual):
@@ -86,16 +85,17 @@ def seleccion_padres(fitness_actual, poblacion_actual):
     fitness_sorted = sorted(fitness_actual)
     for i in range(int(len(fitness_actual) / 2)):
         poblacion_actual[i] = poblacion_aux[fitness_actual.index(fitness_sorted[i])]
-    poblacion_actual[int((len(fitness_actual) / 2)):] = poblacion_actual[:int((len(fitness_actual) / 2))]
+    # poblacion_actual[int((len(fitness_actual) / 2)):] = poblacion_actual[:int((len(fitness_actual) / 2))]
+    return poblacion_actual[:int((len(fitness_actual) / 2))]
 
 def cruzamiento(poblacion_actual):
     """
     Funcion que recibe la poblacion actual (list of numpy arrays)
     y realiza un cruce de orden, donde se obtienen 2 nuevos hijos
-    y se modifica la poblacion actual
+    y se modifica la poblacion actual.
     No retorna nada ya que la poblacion se pasa por referencia.
     """
-    for i in range(0,len(poblacion_actual),2):
+    for i in range(0,len(poblacion_actual)-1,2):
         p_cruce_1 = np.random.randint(0, len(poblacion_actual[0]) - 1)
         p_cruce_2 = np.random.randint(p_cruce_1 + 1, len(poblacion_actual[0]))
         aux1 = poblacion_actual[i][p_cruce_1:p_cruce_2]
@@ -116,7 +116,7 @@ def mutacion(poblacion_actual):
     """
     Funcion que recibe la poblacion actual (list of numpy arrays)
     y realiza una mutacion por cada individuo.
-    Esta mutacion consiste en seleccionar 2 genes al azar e intercambiarlos
+    Esta mutacion consiste en seleccionar 2 genes al azar e intercambiarlos.
     No retorna nada ya que la poblacion se pasa por referencia.
     """
     for i in range(0, len(poblacion_actual)):
@@ -131,7 +131,7 @@ if __name__ == "__main__" :
 
     #----Creacion de las Ordenes----#
     np.random.seed(101) #Para que siempre trabajemos con las mismas ordenes
-    lista_ordenes = creacion_ordenes(32,1,4,10)
+    lista_ordenes = creacion_ordenes(32,10,4,10)
 
     #----Creacion de la poblacion inicial----#
     ejemplo_almacen = np.arange(1,33)
@@ -151,14 +151,18 @@ if __name__ == "__main__" :
     vec_it = []
     it = 0
     vec_it.append(it)
-    while(it < 500):
+    while(it < 300):
 
         #----Seleccion Padres----#
-        seleccion_padres(fitness_actual,poblacion_actual)
+        poblacion_actual = seleccion_padres(fitness_actual,poblacion_actual)
+        mejores_padres = poblacion_actual.copy()
 
         #----Evolucion----#
         cruzamiento(poblacion_actual)
         mutacion(poblacion_actual)
+
+        #----Añado los hijos con los mejores padres a la poblacion---#
+        poblacion_actual = np.concatenate([mejores_padres,poblacion_actual])
 
         #----Calculo fitness----#
         fitness_actual = []
