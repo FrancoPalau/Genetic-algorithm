@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # TO DO LIST:
-#             _ Hacer devuelta la seleccion de seleccion_padres
+#             _ Ver tema de copia de mejores padres
 #             _ Agregar algoritmo con restricciones para el fitness interno (ver opcion tabla)
 #             _ Optimizar la construccion del mapa
 
@@ -81,6 +81,12 @@ def fitness_interno(lista_ordenes, almacen_actual):
     return promedio_dist
 
 def seleccion_padres(fitness_actual, poblacion_actual):
+    """
+    Funcion que recibe la poblacion actual (list of numpy arrays)
+    y ordena los individuos segun su fitness.
+    Retorna los k/2 mejores individuos, donde k es la cantidad de
+    individuos de toda la poblacion.
+    """
     poblacion_aux = poblacion_actual.copy()
     fitness_sorted = sorted(fitness_actual)
     for i in range(int(len(fitness_actual) / 2)):
@@ -131,7 +137,7 @@ if __name__ == "__main__" :
 
     #----Creacion de las Ordenes----#
     np.random.seed(101) #Para que siempre trabajemos con las mismas ordenes
-    lista_ordenes = creacion_ordenes(32,10,4,10)
+    lista_ordenes = creacion_ordenes(32,20,4,10)
 
     #----Creacion de la poblacion inicial----#
     ejemplo_almacen = np.arange(1,33)
