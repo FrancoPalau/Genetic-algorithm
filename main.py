@@ -91,6 +91,7 @@ def seleccion_padres(fitness_actual, poblacion_actual):
     fitness_sorted = sorted(fitness_actual)
     for i in range(int(len(fitness_actual) / 2)):
         poblacion_actual[i] = poblacion_aux[fitness_actual.index(fitness_sorted[i])]
+        fitness_actual[fitness_actual.index(fitness_sorted[i])] = -1
     # poblacion_actual[int((len(fitness_actual) / 2)):] = poblacion_actual[:int((len(fitness_actual) / 2))]
     return poblacion_actual[:int((len(fitness_actual) / 2))]
 
@@ -133,7 +134,7 @@ def mutacion(poblacion_actual):
 
 if __name__ == "__main__" :
 
-    fig = plt.figure()
+    fig, axes = plt.subplots()
 
     #----Creacion de las Ordenes----#
     np.random.seed(101) #Para que siempre trabajemos con las mismas ordenes
@@ -148,16 +149,16 @@ if __name__ == "__main__" :
     for individuo in poblacion_actual:
         fitness_actual.append(fitness_interno(lista_ordenes.copy(),individuo))
     fitness_prom = sum(fitness_actual)/len(poblacion_actual)
-    print(fitness_actual)
-    print(fitness_prom)
 
     #----Loop del algo genetico----#
     vec_fit_prom = []
     vec_fit_prom.append(fitness_prom)
+    vec_fit_best = []
+    vec_fit_best.append(min(fitness_actual))
     vec_it = []
     it = 0
     vec_it.append(it)
-    while(it < 300):
+    while(it < 3):
 
         #----Seleccion Padres----#
         poblacion_actual = seleccion_padres(fitness_actual,poblacion_actual)
@@ -175,12 +176,20 @@ if __name__ == "__main__" :
         for individuo in poblacion_actual:
             fitness_actual.append(fitness_interno(lista_ordenes.copy(), individuo))
         fitness_prom = sum(fitness_actual) / len(poblacion_actual)
-        print("IT:",it,"Fitness",fitness_prom)
+
+        print("IT:",it,"Fitness",fitness_prom, "Best Fitness", min(fitness_actual))
 
         vec_fit_prom.append(fitness_prom)
+        vec_fit_best.append(min(fitness_actual))
         it+=1
         vec_it.append(it)
 
-    plt.plot(vec_it,vec_fit_prom)
+    #---Graficamos---#
+    axes.set_xlabel('Iteraciones')
+    axes.set_ylabel('Fitness')
+    axes.set_title('Fitness almacen')
+    plt.plot(vec_it,vec_fit_prom, label="Fitness promedio")
+    plt.plot(vec_it,vec_fit_best, label="Mejor Fitness")
+    plt.legend()
     plt.show()
 
